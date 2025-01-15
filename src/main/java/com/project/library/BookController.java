@@ -19,6 +19,14 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
+    // Afișează toate cărțile
+    @GetMapping("/books/all")
+    public String viewAllBooks(Model model) {
+        List<Book> books = bookRepository.findAll();
+        model.addAttribute("books", books);
+        return "view_all_books";
+    }
+
     // Afișează pagina de căutare
     @GetMapping("/books/search")
     public String showSearchPage() {
