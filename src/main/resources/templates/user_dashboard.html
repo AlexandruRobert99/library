@@ -7,20 +7,18 @@
 </head>
 <body>
 
-<!-- 🔝 Navbar păstrat momentan -->
 <div class="navbar">
     <a href="/user/dashboard">Dashboard</a>
-    <a href="/user/view-books">Vizualizează Cărți</a>
+    <a href="/books/search">Caută Cărți</a>
     <a href="/user/view-loans">Împrumuturile Mele</a>
     <a href="/user/logout">Delogare</a>
-
 </div>
 
-<!-- 👋 Mesaj de întâmpinare personalizat -->
+
 <h1 style="text-align: center; margin-top: 20px;">Bine ai venit, <span th:text="${username}">Utilizator</span>!</h1>
 
 <div class="container">
-    <!-- 💡 Aici poți adăuga secțiuni suplimentare pentru utilizator -->
+
     <p style="text-align: center; margin-top: 20px;">Explorează cărțile disponibile sau verifică împrumuturile tale active.</p>
 </div>
 

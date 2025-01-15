@@ -105,4 +105,9 @@ public class LoanService {
         return loanRepository.findByReturnDateIsNotNull();
     }
 
+    public List<Loan> getUserLoans(User user) {
+        return loanRepository.findByUser(user);
+    }
+
+
 }

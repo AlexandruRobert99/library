@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Împrumuturile Mele</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .penalty {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/user/dashboard">Dashboard</a>
+    <a href="/books/search">Caută Cărți</a>
+    <a href="/user/view-loans">Împrumuturile Mele</a>
+    <a href="/user/logout">Delogare</a>
+</div>
+
+<h2 style="text-align: center;">Împrumuturile Mele</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID Împrumut</th>
+        <th>Titlu Carte</th>
+        <th>Data Împrumutului</th>
+        <th>Data Scadenței</th>
+        <th>Data Returnării</th>
+        <th>Status</th>
+        <th>Penalizare</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loan : ${userLoans}">
+        <td th:text="${loan.id}"></td>
+        <td th:text="${loan.book.title}"></td>
+        <td th:text="${loan.loanDate}"></td>
+        <td th:text="${loan.dueDate}"></td>
+        <td th:text="${loan.returnDate != null} ? ${loan.returnDate} : 'N/A'"></td>
+        <td th:text="${loan.returnDate == null} ? 'Împrumutat' : 'Returnat'"></td>
+
+        <!-- Penalizare evidențiată -->
+        <td th:text="${loan.penalty > 0 ? loan.penalty + ' lei' : '0 lei'}"
+            th:classappend="${loan.penalty > 0} ? 'penalty' : ''"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
