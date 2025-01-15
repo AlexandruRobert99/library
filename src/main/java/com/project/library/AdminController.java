@@ -266,4 +266,28 @@ public class AdminController {
         return "assign_loan";
     }
 
+    // Afișează formularul de editare pentru un împrumut
+    @GetMapping("/admin/edit-loan/{id}")
+    public String showEditLoanForm(@PathVariable Long id, Model model) {
+        Loan loan = loanService.findById(id);
+        model.addAttribute("loan", loan);
+        return "edit_loan";
+    }
+
+    // Actualizează împrumutul
+    @PostMapping("/admin/update-loan/{id}")
+    public String updateLoan(@PathVariable Long id, @ModelAttribute("loan") Loan updatedLoan, RedirectAttributes redirectAttributes) {
+        loanService.updateLoan(id, updatedLoan);
+        redirectAttributes.addFlashAttribute("successMessage", "Împrumutul a fost actualizat cu succes!");
+        return "redirect:/admin/view-loans";
+    }
+
+    // Ștergere împrumut
+    @PostMapping("/admin/delete-loan/{id}")
+    public String deleteLoan(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        loanService.deleteLoan(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Împrumutul a fost șters cu succes!");
+        return "redirect:/admin/view-loans";
+    }
+
 }

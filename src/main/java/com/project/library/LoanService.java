@@ -109,5 +109,31 @@ public class LoanService {
         return loanRepository.findByUser(user);
     }
 
+    // Găsește împrumutul după ID
+    public Loan findById(Long id) {
+        return loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Împrumutul nu a fost găsit."));
+    }
+
+    // Actualizează împrumutul
+    @Transactional
+    public void updateLoan(Long id, Loan updatedLoan) {
+        Loan loan = findById(id);
+        loan.setLoanDate(updatedLoan.getLoanDate());
+        loan.setDueDate(updatedLoan.getDueDate());
+        loan.setReturnDate(updatedLoan.getReturnDate());
+        loan.setPenalty(updatedLoan.getPenalty());
+        loanRepository.save(loan);
+    }
+
+    // Șterge împrumutul
+    @Transactional
+    public void deleteLoan(Long id) {
+        loanRepository.deleteById(id);
+    }
+
+
+
+
 
 }

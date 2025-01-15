@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editare Împrumut</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        form {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">Editare Împrumut</h2>
+
+<form th:action="@{'/admin/update-loan/' + ${loan.id}}" th:object="${loan}" method="post">
+
+    <label>ID Împrumut:</label>
+    <input type="text" th:value="${loan.id}" readonly/>
+
+    <label>Utilizator:</label>
+    <input type="text" th:value="${loan.user.username}" readonly/>
+
+    <label>Titlu Carte:</label>
+    <input type="text" th:value="${loan.book.title}" readonly/>
+
+    <label>Data Împrumutului:</label>
+    <input type="text" th:field="*{loanDate}" placeholder="YYYY-MM-DD"/>
+
+    <label>Data Scadenței:</label>
+    <input type="text" th:field="*{dueDate}" placeholder="YYYY-MM-DD"/>
+
+    <label>Data Returnării:</label>
+    <input type="text" th:field="*{returnDate}" placeholder="YYYY-MM-DD sau N/A"/>
+
+    <label>Penalizare:</label>
+    <input type="text" th:field="*{penalty}" placeholder="0 dacă nu există penalizare"/>
+
+    <button type="submit" class="btn">Salvează Modificările</button>
+</form>
+
+<a href="/admin/view-loans">Înapoi la lista împrumuturilor</a>
+
+</body>
+</html>

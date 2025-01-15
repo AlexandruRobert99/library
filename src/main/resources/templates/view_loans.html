@@ -26,16 +26,26 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            text-decoration: none;
         }
 
-        .btn-return {
-            background-color: #4CAF50;
+        .btn-edit {
+            background-color: #2196F3;
             color: white;
         }
 
-        .btn-return[disabled] {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-delete:hover, .btn-edit:hover {
+            opacity: 0.8;
+        }
+
+        .penalty {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -70,8 +80,8 @@
         <th>Data Scadenței</th>
         <th>Data Returnării</th>
         <th>Status</th>
-        <th>Acțiuni</th>
         <th>Penalizări</th>
+        <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
@@ -83,17 +93,18 @@
         <td th:text="${loan.dueDate}"></td>
         <td th:text="${loan.returnDate != null} ? ${loan.returnDate} : 'N/A'"></td>
         <td th:text="${loan.returnDate == null} ? 'Împrumutat' : 'Returnat'"></td>
+        <td th:text="${loan.penalty > 0 ? loan.penalty + ' lei' : '0 lei'}"
+            th:classappend="${loan.penalty > 0} ? 'penalty' : ''"></td>
+
+        <!-- Butoane de Editare și Ștergere -->
         <td>
-            <form th:action="@{'/admin/return-loan/' + ${loan.id}}" method="post">
-                <button type="submit"
-                        th:disabled="${loan.returnDate != null}"
-                        class="btn btn-return">
-                    Confirmă Returnare
+            <a th:href="@{'/admin/edit-loan/' + ${loan.id}}" class="btn btn-edit">Editare</a>
+            <form th:action="@{'/admin/delete-loan/' + ${loan.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-delete" onclick="return confirm('Ești sigur că vrei să ștergi acest împrumut?');">
+                    Ștergere
                 </button>
             </form>
         </td>
-        <td th:text="${loan.penalty > 0 ? loan.penalty + ' lei' : '0 lei'}"
-            th:classappend="${loan.penalty > 0} ? 'penalty' : ''"></td>
     </tr>
     </tbody>
 </table>
