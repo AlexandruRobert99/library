@@ -48,6 +48,28 @@ public class AdminService {
         return "Contul de administrator a fost creat cu succes!";
     }
 
+    // Returnează toți utilizatorii
+    @Transactional
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    // Actualizează datele unui utilizator
+    @Transactional
+    public String updateUser(Long userId, User updatedUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilizatorul nu a fost găsit."));
+
+        user.setUsername(updatedUser.getUsername());
+        user.setEmail(updatedUser.getEmail());
+        user.setPhoneNumber(updatedUser.getPhoneNumber());
+        user.setActive(updatedUser.isActive());
+
+        userRepository.save(user);
+        return "Utilizatorul a fost actualizat cu succes!";
+    }
+
+
     @Transactional
     public User findUserById(Long userId) {
         return userRepository.findById(userId)
@@ -178,4 +200,44 @@ public class AdminService {
         userRepository.deleteById(userId);
         return "Utilizatorul a fost șters cu succes!";
     }
+
+    // Returnează toate împrumuturile
+    @Transactional
+    public List<Loan> getAllLoans() {
+        return loanRepository.findAll();
+    }
+
+    // Confirmă returnarea unei cărți
+    @Transactional
+    public String confirmReturn(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Împrumutul nu a fost găsit."));
+
+        if (loan.getReturnDate() != null) {
+            return "Cartea a fost deja returnată.";
+        }
+
+        loan.setReturnDate(java.time.LocalDate.now());
+        loanRepository.save(loan);
+
+        Book book = loan.getBook();
+        book.setPhysicalCopies(book.getPhysicalCopies() + 1);
+        bookRepository.save(book);
+
+        return "Returnarea a fost confirmată cu succes!";
+    }
+
+    // Returnează toate cărțile
+    @Transactional
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    // Găsește o carte după ID
+    @Transactional
+    public Book findBookById(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cartea nu a fost găsită."));
+    }
+
 }

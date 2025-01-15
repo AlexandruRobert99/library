@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestionare Cărți</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #ffa500;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .pdf-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/admin/manage-books">Gestionare Cărți</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/manage-users">Gestionare Utilizatori</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+<h2 style="text-align: center;">Lista Completă a Cărților</h2>
+
+<div th:if="${message}">
+    <p th:text="${message}" style="color: green; text-align: center;"></p>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Titlu</th>
+        <th>Autor</th>
+        <th>Editură</th>
+        <th>ISBN</th>
+        <th>Pagini</th>
+        <th>Exemplare Fizice</th>
+        <th>PDF</th>  <!-- Noua coloană PDF -->
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${allBooks}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.publisher}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.pages}"></td>
+        <td th:text="${book.physicalCopies}"></td>
+
+        <!-- Coloana PDF -->
+        <td>
+            <span th:if="${book.pdfUrl != null}">
+                <a th:href="@{'/' + ${book.pdfUrl}}" target="_blank">Descarcă PDF</a>
+            </span>
+            <span th:if="${book.pdfUrl == null}">
+                -
+            </span>
+        </td>
+
+        <!-- Acțiuni -->
+        <td>
+            <a th:href="@{'/admin/edit-book/' + ${book.id}}" class="btn btn-edit">Editează</a>
+
+            <form th:action="@{'/admin/delete-book/' + ${book.id}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-delete" onclick="return confirm('Ești sigur că vrei să ștergi această carte?');">
+                    Șterge
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

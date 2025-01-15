@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editare Utilizator</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h2>Editare Utilizator</h2>
+
+<form th:action="@{'/admin/update-user/' + ${user.id}}" th:object="${user}" method="post">
+    <label>Username:</label>
+    <input type="text" th:field="*{username}" required/><br/><br/>
+
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required/><br/><br/>
+
+    <label>Număr Telefon:</label>
+    <input type="text" th:field="*{phoneNumber}" required/><br/><br/>
+
+    <label>Status:</label>
+    <select th:field="*{active}">
+        <option value="true">Activ</option>
+        <option value="false">Inactiv</option>
+    </select><br/><br/>
+
+    <button type="submit">Salvează Modificările</button>
+</form>
+
+<a href="/admin/manage-users">Înapoi la lista utilizatorilor</a>
+
+</body>
+</html>

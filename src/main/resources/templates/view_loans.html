@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Împrumuturi Cărți</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-return {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-return[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/admin/manage-books">Gestionare Cărți</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/manage-users">Gestionare Utilizatori</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+<h2 style="text-align: center;">Lista Împrumuturilor</h2>
+
+<div th:if="${message}">
+    <p th:text="${message}" style="color: green; text-align: center;"></p>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID Împrumut</th>
+        <th>Utilizator</th>
+        <th>Titlu Carte</th>
+        <th>Data Împrumutului</th>
+        <th>Data Returnării</th>
+        <th>Status</th>
+        <th>Acțiuni</th>
+        <th>Penalizări</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loan : ${allLoans}">
+        <td th:text="${loan.id}"></td>
+        <td th:text="${loan.user.username}"></td>
+        <td th:text="${loan.book.title}"></td>
+        <td th:text="${loan.loanDate}"></td>
+        <td th:text="${loan.returnDate != null} ? ${loan.returnDate} : 'N/A'"></td>
+        <td th:text="${loan.returnDate == null} ? 'Împrumutat' : 'Returnat'"></td>
+        <td>
+            <form th:action="@{'/admin/confirm-return/' + ${loan.id}}" method="post">
+                <button type="submit"
+                        th:disabled="${loan.returnDate != null}"
+                        class="btn btn-return">
+                    Confirmă Returnare
+                </button>
+            </form>
+        </td>
+        <td th:text="${loan.penalty}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

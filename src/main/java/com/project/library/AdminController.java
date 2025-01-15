@@ -133,4 +133,92 @@ public class AdminController {
         }
     }
 
+    // Afișează lista completă a utilizatorilor
+    @GetMapping("/admin/manage-users")
+    public String showAllUsers(Model model) {
+        List<User> allUsers = adminService.getAllUsers();
+        model.addAttribute("allUsers", allUsers);
+        return "manage_users";  // Pagina pentru gestionarea utilizatorilor
+    }
+
+    // Șterge un utilizator după ID
+    @PostMapping("/admin/delete-user/{id}")
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        String response = adminService.deleteUser(id);
+        redirectAttributes.addFlashAttribute("message", response);
+        return "redirect:/admin/manage-users";
+    }
+
+    // Afișează formularul de editare a utilizatorului
+    @GetMapping("/admin/edit-user/{id}")
+    public String showEditUserForm(@PathVariable Long id, Model model) {
+        User user = adminService.findUserById(id);
+        model.addAttribute("user", user);
+        return "edit_user";
+    }
+
+    // Salvează modificările aduse utilizatorului
+    @PostMapping("/admin/update-user/{id}")
+    public String updateUser(@PathVariable Long id, @ModelAttribute("user") User updatedUser, RedirectAttributes redirectAttributes) {
+        String response = adminService.updateUser(id, updatedUser);
+        redirectAttributes.addFlashAttribute("message", response);
+        return "redirect:/admin/manage-users";
+    }
+
+    // Afișează toate împrumuturile
+    @GetMapping("/admin/view-loans")
+    public String viewAllLoans(Model model) {
+        List<Loan> allLoans = adminService.getAllLoans();
+        model.addAttribute("allLoans", allLoans);
+        return "view_loans";
+    }
+
+    // Confirmă returnarea unei cărți
+    @PostMapping("/admin/confirm-return/{loanId}")
+    public String confirmReturn(@PathVariable Long loanId, RedirectAttributes redirectAttributes) {
+        String response = adminService.confirmReturn(loanId);
+        redirectAttributes.addFlashAttribute("message", response);
+        return "redirect:/admin/view-loans";
+    }
+
+    // Afișează toate cărțile
+    @GetMapping("/admin/manage-books")
+    public String showAllBooks(Model model) {
+        List<Book> allBooks = adminService.getAllBooks();
+        model.addAttribute("allBooks", allBooks);
+        return "manage_books";
+    }
+
+    // Afișează formularul de editare a unei cărți
+    @GetMapping("/admin/edit-book/{id}")
+    public String showEditBookForm(@PathVariable Long id, Model model) {
+        Book book = adminService.findBookById(id);
+        model.addAttribute("book", book);
+        return "edit_book";
+    }
+
+    // Procesează actualizarea unei cărți
+    @PostMapping("/admin/edit-book/{id}")
+    public String updateBook(@PathVariable Long id,
+                             @ModelAttribute("book") Book updatedBook,
+                             @RequestParam("pdfFile") MultipartFile pdfFile,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            String response = adminService.updateBook(id, updatedBook, pdfFile);
+            redirectAttributes.addFlashAttribute("successMessage", response);
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Eroare la încărcarea fișierului PDF.");
+        }
+        return "redirect:/admin/manage-books";
+    }
+
+    // Șterge o carte
+    @PostMapping("/admin/delete-book/{id}")
+    public String deleteBook(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        String response = adminService.deleteBook(id);
+        redirectAttributes.addFlashAttribute("message", response);
+        return "redirect:/admin/manage-books";
+    }
+
+
 }

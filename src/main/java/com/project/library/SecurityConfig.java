@@ -12,28 +12,52 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final AdminDetailsService adminDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;  // ➡️ Adăugat pentru utilizatori
 
-    public SecurityConfig(AdminDetailsService adminDetailsService) {
+    public SecurityConfig(AdminDetailsService adminDetailsService, UserDetailsServiceImpl userDetailsService) {
         this.adminDetailsService = adminDetailsService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").authenticated()
+                        // 🔒 Rutele Admin
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // 🔒 Rutele User
+                        .requestMatchers("/user/**").hasRole("USER")
+
+                        // 🔓 Rutele publice
                         .anyRequest().permitAll()
                 )
+                // 🔐 Login pentru Admin
                 .formLogin(form -> form
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin/dashboard", true)
                         .permitAll()
                 )
+                // 🔐 Login pentru User
+                .formLogin(form -> form
+                        .loginPage("/user/login")
+                        .defaultSuccessUrl("/user/dashboard", true)
+                        .permitAll()
+                )
+                // 🚪 Logout pentru Admin
                 .logout(logout -> logout
-                        .logoutUrl("/admin/logout")  // Ruta de logout
-                        .logoutSuccessUrl("/admin/login?logout=true")  // Adaugă parametru pentru mesaj
-                        .invalidateHttpSession(true)  // Invalidează sesiunea
-                        .deleteCookies("JSESSIONID")  // Șterge cookie-urile de sesiune
+                        .logoutUrl("/admin/logout")
+                        .logoutSuccessUrl("/admin/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+                // 🚪 Logout pentru User
+                .logout(logout -> logout
+                        .logoutUrl("/user/logout")
+                        .logoutSuccessUrl("/user/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .csrf().disable();
@@ -44,8 +68,13 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
+                // 🔐 Configurare Admin
                 .userDetailsService(adminDetailsService)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())  // Fără criptare
+                .passwordEncoder(NoOpPasswordEncoder.getInstance())
+                // 🔐 Configurare User
+                .and()
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance())
                 .and()
                 .build();
     }
