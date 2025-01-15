@@ -99,7 +99,7 @@
             <td th:text="${user.email}">email@example.com</td>
             <td>
                 <!-- Link pentru descărcarea sau vizualizarea cărții de identitate -->
-                <a th:href="@{'/id-card/' + ${user.id}}" target="_blank">Vezi ID</a>
+                <a th:href="@{'' + ${user.idCardUrl}}" target="_blank">Vezi ID</a>
             </td>
             <td>
                 <form th:action="@{/admin/activate-user/{id}(id=${user.id})}" method="post">
