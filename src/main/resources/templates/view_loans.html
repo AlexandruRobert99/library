@@ -67,6 +67,7 @@
         <th>Utilizator</th>
         <th>Titlu Carte</th>
         <th>Data Împrumutului</th>
+        <th>Data Scadenței</th>
         <th>Data Returnării</th>
         <th>Status</th>
         <th>Acțiuni</th>
@@ -79,10 +80,11 @@
         <td th:text="${loan.user.username}"></td>
         <td th:text="${loan.book.title}"></td>
         <td th:text="${loan.loanDate}"></td>
+        <td th:text="${loan.dueDate}"></td>
         <td th:text="${loan.returnDate != null} ? ${loan.returnDate} : 'N/A'"></td>
         <td th:text="${loan.returnDate == null} ? 'Împrumutat' : 'Returnat'"></td>
         <td>
-            <form th:action="@{'/admin/confirm-return/' + ${loan.id}}" method="post">
+            <form th:action="@{'/admin/return-loan/' + ${loan.id}}" method="post">
                 <button type="submit"
                         th:disabled="${loan.returnDate != null}"
                         class="btn btn-return">
@@ -90,7 +92,8 @@
                 </button>
             </form>
         </td>
-        <td th:text="${loan.penalty}"></td>
+        <td th:text="${loan.penalty > 0 ? loan.penalty + ' lei' : '0 lei'}"
+            th:classappend="${loan.penalty > 0} ? 'penalty' : ''"></td>
     </tr>
     </tbody>
 </table>

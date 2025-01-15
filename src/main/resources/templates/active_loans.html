@@ -23,6 +23,7 @@
 
         .penalty {
             color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -41,14 +42,6 @@
     <a href="/admin/logout">Delogare</a>
 </div>
 
-<div class="navbar">
-    <a href="/admin/dashboard">Dashboard</a>
-    <a href="/admin/add-book">Adaugă Carte</a>
-    <a href="/admin/manage-books">Gestionare Cărți</a>
-    <a href="/admin/active-loans">Împrumuturi Active</a>
-    <a href="/admin/logout">Delogare</a>
-</div>
-
 <h2 style="text-align: center;">Împrumuturi Active</h2>
 
 <table>
@@ -58,8 +51,9 @@
         <th>Nume Utilizator</th>
         <th>Titlu Carte</th>
         <th>Data Împrumutului</th>
-        <th>Data Returnării</th>
+        <th>Data Scadenței</th>
         <th>Penalitate</th>
+        <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
@@ -68,10 +62,19 @@
         <td th:text="${loan.user.username}"></td>
         <td th:text="${loan.book.title}"></td>
         <td th:text="${loan.loanDate}"></td>
-        <td th:text="${loan.returnDate}"></td>
-        <th:block th:if="${loan.returnDate != null and loan.returnDate.isBefore(T(java.time.LocalDate).now())}">
-            <span style="color:red;">Întârziat (Penalizare: <span th:text="${loan.penalty}"></span> lei)</span>
-        </th:block>
+        <td th:text="${loan.dueDate}"></td>
+
+        <!-- Afișare penalizare în roșu dacă există -->
+        <td th:text="${loan.penalty > 0 ? loan.penalty + ' lei' : '0 lei'}"
+            th:classappend="${loan.penalty > 0} ? 'penalty' : ''"></td>
+
+        <!-- Buton pentru returnare carte -->
+        <td>
+            <form th:action="@{'/admin/return-loan/' + ${loan.id}}" method="post">
+                <button type="submit" th:disabled="${loan.returnDate != null}">
+                    Returnează
+                </button>
+            </form>
         </td>
     </tr>
     </tbody>

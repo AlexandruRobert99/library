@@ -65,7 +65,7 @@ public class LoanService {
 
         // Calculează penalizarea dacă este cazul
         if (loan.getDueDate().isBefore(LocalDate.now())) {
-            long daysLate = LocalDate.now().toEpochDay() - loan.getDueDate().toEpochDay();
+            long daysLate = ChronoUnit.DAYS.between(loan.getDueDate(), LocalDate.now());
             int penalty = (int) (daysLate * 50);  // 50 lei/zi întârziere
             loan.setPenalty(penalty);
         }
@@ -74,11 +74,31 @@ public class LoanService {
         return "Cartea a fost returnată cu succes!";
     }
 
+    @Transactional
+    public void updateActiveLoansPenalties() {
+        List<Loan> activeLoans = loanRepository.findByReturnDateIsNull();
+        LocalDate today = LocalDate.now();
+
+        for (Loan loan : activeLoans) {
+            if (loan.getDueDate().isBefore(today)) {
+                long daysLate = ChronoUnit.DAYS.between(loan.getDueDate(), today);
+                int penalty = (int) (daysLate * 50);  // 50 lei/zi întârziere
+                loan.setPenalty(penalty);
+                loanRepository.save(loan);
+            } else {
+                loan.setPenalty(0);  // Fără penalizare dacă nu a întârziat
+                loanRepository.save(loan);
+            }
+        }
+    }
+
 
     // Obține toate împrumuturile active (nereturnate)
     public List<Loan> getActiveLoans() {
+        updateActiveLoansPenalties();
         return loanRepository.findByReturnDateIsNull();
     }
+
 
     // Obține toate împrumuturile returnate
     public List<Loan> getReturnedLoans() {
