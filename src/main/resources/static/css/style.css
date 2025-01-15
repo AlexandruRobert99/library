@@ -1,0 +1,89 @@
+/* Elimină marginile implicite */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Navbar complet pe lățimea paginii */
+.navbar {
+    background-color: #333;
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Link-urile din navbar */
+.navbar a {
+    color: white;
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Spațiere sub navbar */
+body {
+    padding-top: 60px;
+}
+
+/* Containerul formularului */
+.container {
+    background-color: white;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    margin: 40px auto;
+}
+
+/* Stilizare titlu */
+.container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Stilizare label */
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Stilizare input */
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Stilizare buton */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #45a049;
+}

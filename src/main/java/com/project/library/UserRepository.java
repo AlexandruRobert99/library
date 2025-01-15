@@ -19,5 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmailIgnoreCase(String email);
 
     // Găsește toți utilizatorii inactivi (nu e nevoie de IgnoreCase aici)
-    List<User> findByActive(boolean active);
+    List<User> findByActiveFalse();
 }

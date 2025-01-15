@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă Carte</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+<!-- Formular -->
+<div class="container">
+    <h2>Adaugă o carte nouă</h2>
+    <form th:action="@{/admin/add-book}" th:object="${book}" method="post" enctype="multipart/form-data">
+        <label for="title">Titlu:</label>
+        <input type="text" id="title" th:field="*{title}" placeholder="Titlu" required/>
+
+        <label for="author">Autor:</label>
+        <input type="text" id="author" th:field="*{author}" placeholder="Autor" required/>
+
+        <label for="category">Categorie:</label>
+        <input type="text" id="category" th:field="*{category}" placeholder="Categorie" required/>
+
+        <label for="collection">Colecție:</label>
+        <input type="text" id="collection" th:field="*{collection}" placeholder="Colecție" required/>
+
+        <label for="cover_type">Tip Copertă:</label>
+        <input type="text" id="cover_type" th:field="*{coverType}" placeholder="Tip Copertă" required/>
+
+        <label for="edition">Ediție:</label>
+        <input type="text" id="edition" th:field="*{edition}" placeholder="Ediție" required/>
+
+        <label for="format">Format:</label>
+        <input type="text" id="format" th:field="*{format}" placeholder="Format" required/>
+
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" th:field="*{isbn}" placeholder="ISBN" required/>
+
+        <label for="pages">Număr pagini:</label>
+        <input type="number" id="pages" th:field="*{pages}" placeholder="Număr pagini" required/>
+
+        <label for="pdfFile">PDF (format electronic):</label>
+        <input type="file" id="pdfFile" name="pdfFile" accept=".pdf"/>
+
+        <label for="physicalCopies">Exemplare fizice:</label>
+        <input type="number" id="physicalCopies" th:field="*{physicalCopies}" placeholder="Număr exemplare" required/>
+
+        <label for="publisher">Editură:</label>
+        <input type="text" id="publisher" th:field="*{publisher}" placeholder="Editură" required/>
+
+        <label for="releaseDate">Data apariției:</label>
+        <input type="date" id="releaseDate" th:field="*{releaseDate}" required/>
+
+        <label for="translator">Traducător:</label>
+        <input type="text" id="translator" th:field="*{translator}" placeholder="Traducător" required/>
+
+        <button type="submit">Adaugă Carte</button>
+    </form>
+</div>
+
+</body>
+</html>

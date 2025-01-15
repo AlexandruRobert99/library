@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+
+<h1 style="text-align: center; margin-top: 20px;">Bine ai venit, <span th:text="${username}">Admin</span>!</h1>
+
+<div class="container">
+
+    <!-- Adăugare carte -->
+    <div class="card">
+        <h3>Adaugă Carte</h3>
+        <button onclick="window.location.href='/admin/add-book'">Adaugă Carte Nouă</button>
+    </div>
+    <form th:action="@{/admin/logout}" method="post" style="display:inline;">
+        <button type="submit" style="background-color: #333; color: white; border: none; font-weight: bold; cursor: pointer;">
+            Delogare
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

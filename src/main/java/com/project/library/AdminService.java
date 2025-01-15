@@ -19,6 +19,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final LoanRepository loanRepository;
 
+    private static final String BOOK_PDF_STORAGE_PATH = "uploads/book_pdfs/";
     private static final String ID_CARD_STORAGE_PATH = "uploads/id_cards/";
 
     public AdminService(AdminRepository adminRepository, BookRepository bookRepository,
@@ -29,7 +30,6 @@ public class AdminService {
         this.loanRepository = loanRepository;
     }
 
-    //  Autentificare Admin
     @Transactional
     public String authenticateAdmin(String username, String password) {
         Admin admin = adminRepository.findByUsernameIgnoreCaseAndPassword(username, password);
@@ -39,19 +39,35 @@ public class AdminService {
         return "Autentificare reușită!";
     }
 
-    //  Adaugă o carte nouă cu verificare ISBN
     @Transactional
-    public String addBook(Book book) {
+    public String registerAdmin(Admin admin) {
+        if (adminRepository.findByUsernameIgnoreCase(admin.getUsername()) != null) {
+            return "Username-ul de administrator este deja folosit!";
+        }
+        adminRepository.save(admin);
+        return "Contul de administrator a fost creat cu succes!";
+    }
+
+    @Transactional
+    public List<User> getInactiveUsers() {
+        return userRepository.findByActiveFalse();
+    }
+
+    @Transactional
+    public String addBook(Book book, MultipartFile pdfFile) throws IOException {
         if (bookRepository.findByIsbn(book.getIsbn()) != null) {
             return "ISBN-ul există deja!";
+        }
+        if (pdfFile != null && !pdfFile.isEmpty()) {
+            String pdfPath = savePdfFile(pdfFile);
+            book.setPdfUrl(pdfPath);
         }
         bookRepository.save(book);
         return "Cartea a fost adăugată cu succes!";
     }
 
-    //  Editează o carte existentă cu verificare ISBN duplicat
     @Transactional
-    public String updateBook(Long bookId, Book updatedBook) {
+    public String updateBook(Long bookId, Book updatedBook, MultipartFile pdfFile) throws IOException {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Cartea nu a fost găsită."));
 
@@ -71,15 +87,18 @@ public class AdminService {
         book.setFormat(updatedBook.getFormat());
         book.setCoverType(updatedBook.getCoverType());
         book.setReleaseDate(updatedBook.getReleaseDate());
-        book.setPdfUrl(updatedBook.getPdfUrl());
         book.setPhysicalCopies(updatedBook.getPhysicalCopies());
         book.setCategory(updatedBook.getCategory());
+
+        if (pdfFile != null && !pdfFile.isEmpty()) {
+            String pdfPath = savePdfFile(pdfFile);
+            book.setPdfUrl(pdfPath);
+        }
 
         bookRepository.save(book);
         return "Cartea a fost actualizată cu succes!";
     }
 
-    //  Șterge o carte
     @Transactional
     public String deleteBook(Long bookId) {
         if (!bookRepository.existsById(bookId)) {
@@ -89,7 +108,6 @@ public class AdminService {
         return "Cartea a fost ștearsă cu succes!";
     }
 
-    //  Validează un utilizator (activează contul)
     @Transactional
     public String validateUser(Long userId) {
         User user = userRepository.findById(userId)
@@ -104,7 +122,6 @@ public class AdminService {
         return "Contul a fost activat cu succes!";
     }
 
-    //  Încarcă și validează cartea de identitate
     @Transactional
     public String uploadIdCard(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId)
@@ -133,7 +150,16 @@ public class AdminService {
         return "Cartea de identitate a fost încărcată cu succes!";
     }
 
-    //  Șterge un utilizator și fișierul ID dacă nu are împrumuturi active
+    private String savePdfFile(MultipartFile pdfFile) throws IOException {
+        String originalFilename = pdfFile.getOriginalFilename();
+        String uniqueFileName = UUID.randomUUID() + "_" + originalFilename;
+        Path uploadPath = Paths.get(BOOK_PDF_STORAGE_PATH);
+        Files.createDirectories(uploadPath);
+        Path filePath = uploadPath.resolve(uniqueFileName);
+        Files.copy(pdfFile.getInputStream(), filePath);
+        return filePath.toString();
+    }
+
     @Transactional
     public String deleteUser(Long userId) {
         User user = userRepository.findById(userId)
@@ -141,13 +167,6 @@ public class AdminService {
 
         if (!loanRepository.findByUserAndReturnDateIsNull(user).isEmpty()) {
             return "Utilizatorul are împrumuturi active și nu poate fi șters!";
-        }
-
-        try {
-            Path idCardPath = Paths.get(user.getIdCardUrl());
-            Files.deleteIfExists(idCardPath);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         userRepository.deleteById(userId);
