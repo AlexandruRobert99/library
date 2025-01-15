@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Autentificare Utilizator</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h2>Autentificare Utilizator</h2>
+
+<div th:if="${param.error}">
+    <p style="color: red;">Username sau parolă incorecte!</p>
+</div>
+
+<div th:if="${param.logout}">
+    <p style="color: green;">Te-ai delogat cu succes!</p>
+</div>
+
+<form th:action="@{/user/login}" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required/><br/>
+
+    <label for="password">Parolă:</label>
+    <input type="password" id="password" name="password" required/><br/>
+
+    <button type="submit">Autentificare</button>
+</form>
+
+<p>Nu ai cont? <a href="/user/register">Înregistrează-te aici</a></p>
+
+</body>
+</html>

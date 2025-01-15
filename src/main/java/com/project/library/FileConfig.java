@@ -9,7 +9,7 @@ public class FileConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**")  // URL-ul accesibil
+        registry.addResourceHandler("/uploads/**")  // Ruta din browser
                 .addResourceLocations("file:uploads/");  // Locația fișierelor pe disc
     }
 }

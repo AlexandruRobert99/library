@@ -94,7 +94,7 @@ public class UserService {
         Files.createDirectories(uploadPath);
         Path filePath = uploadPath.resolve(uniqueFileName);
         Files.copy(file.getInputStream(), filePath);
-        return filePath.toString();
+        return "/uploads/id_cards/" + username + "/" + uniqueFileName;
     }
 
     @Transactional

@@ -38,6 +38,11 @@
             background-color: #f44336;
             color: white;
         }
+
+        .pdf-link {
+            color: #007bff;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +71,7 @@
         <th>Email</th>
         <th>Număr Telefon</th>
         <th>Status</th>
+        <th>Carte de Identitate</th> <!-- Noua coloană -->
         <th>Acțiuni</th>
     </tr>
     </thead>
@@ -76,8 +82,21 @@
         <td th:text="${user.email}"></td>
         <td th:text="${user.phoneNumber}"></td>
         <td th:text="${user.active} ? 'Activ' : 'Inactiv'"></td>
+
+        <!-- Link către Cartea de Identitate -->
+        <td>
+            <span th:if="${user.idCardUrl != null}">
+                <a th:href="@{'' + ${user.idCardUrl}}" target="_blank">Vezi Buletin</a>
+            </span>
+            <span th:if="${user.idCardUrl == null}">
+            -
+            </span>
+        </td>
+
+
         <td>
             <a th:href="@{'/admin/edit-user/' + ${user.id}}" class="btn btn-edit">Edit</a>
+
             <form th:action="@{'/admin/delete-user/' + ${user.id}}" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-delete" onclick="return confirm('Sigur vrei să ștergi acest utilizator?');">Delete</button>
             </form>

@@ -1,5 +1,4 @@
 package com.project.library;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,44 +6,33 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 @Configuration
 public class SecurityConfig {
 
     private final AdminDetailsService adminDetailsService;
-    private final UserDetailsServiceImpl userDetailsService;  // ➡️ Adăugat pentru utilizatori
+    private final UserDetailsServiceImpl userDetailsService;
 
     public SecurityConfig(AdminDetailsService adminDetailsService, UserDetailsServiceImpl userDetailsService) {
         this.adminDetailsService = adminDetailsService;
         this.userDetailsService = userDetailsService;
     }
 
+    // 🔐 Configurare securitate pentru ADMIN
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/admin/**")  // Se aplică doar pe /admin/**
                 .authorizeHttpRequests(auth -> auth
-                        // 🔒 Rutele Admin
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-
-                        // 🔒 Rutele User
-                        .requestMatchers("/user/**").hasRole("USER")
-
-                        // 🔓 Rutele publice
-                        .anyRequest().permitAll()
+                        .requestMatchers("/admin/login", "/admin/register").permitAll()
+                        .anyRequest().hasRole("ADMIN")
                 )
-                // 🔐 Login pentru Admin
                 .formLogin(form -> form
                         .loginPage("/admin/login")
+                        .loginProcessingUrl("/admin/login")
                         .defaultSuccessUrl("/admin/dashboard", true)
+                        .failureUrl("/admin/login?error=true")
                         .permitAll()
                 )
-                // 🔐 Login pentru User
-                .formLogin(form -> form
-                        .loginPage("/user/login")
-                        .defaultSuccessUrl("/user/dashboard", true)
-                        .permitAll()
-                )
-                // 🚪 Logout pentru Admin
                 .logout(logout -> logout
                         .logoutUrl("/admin/logout")
                         .logoutSuccessUrl("/admin/login?logout=true")
@@ -52,7 +40,27 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                // 🚪 Logout pentru User
+                .csrf().disable();
+
+        return http.build();
+    }
+
+    // 🔐 Configurare securitate pentru USER
+    @Bean
+    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/user/**")  // Se aplică doar pe /user/**
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/login", "/user/register").permitAll()
+                        .anyRequest().hasRole("USER")
+                )
+                .formLogin(form -> form
+                        .loginPage("/user/login")
+                        .loginProcessingUrl("/user/login")
+                        .defaultSuccessUrl("/user/dashboard", true)
+                        .failureUrl("/user/login?error=true")
+                        .permitAll()
+                )
                 .logout(logout -> logout
                         .logoutUrl("/user/logout")
                         .logoutSuccessUrl("/user/login?logout=true")
@@ -65,17 +73,17 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // 🛠️ Configurare AuthenticationManager pentru ambele servicii
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                // 🔐 Configurare Admin
-                .userDetailsService(adminDetailsService)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                // 🔐 Configurare User
-                .and()
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .and()
-                .build();
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        builder.userDetailsService(adminDetailsService)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
+
+        builder.userDetailsService(userDetailsService)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
+
+        return builder.build();
     }
 }

@@ -18,13 +18,13 @@ public class AdminDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Admin admin = adminRepository.findByUsernameIgnoreCase(username);
         if (admin == null) {
-            throw new UsernameNotFoundException("Adminul nu a fost găsit!");
+            throw new UsernameNotFoundException("Adminul nu a fost găsit: " + username);
         }
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(admin.getUsername())
-                .password("{noop}" + admin.getPassword())  // {noop} => fără criptare
-                .roles("ADMIN")  // Setăm rolul ADMIN
+                .password(admin.getPassword())
+                .roles("ADMIN")
                 .build();
     }
 }
