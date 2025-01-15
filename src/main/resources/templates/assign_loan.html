@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Împrumută Carte</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/books/search">Caută Cărți</a>
+    <a href="/admin/manage-books">Gestionare Cărți</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/manage-users">Gestionare Utilizatori</a>
+    <a href="/admin/assign-loan">Împrumută Carte</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/active-loans">Împrumuturi active</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+<h2 style="text-align:center;">Împrumută o Carte unui Utilizator</h2>
+
+<!-- Mesaj de succes sau eroare -->
+<div th:if="${successMessage}">
+    <p style="color:green; text-align:center;" th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p style="color:red; text-align:center;" th:text="${errorMessage}"></p>
+</div>
+
+<!-- Formular de împrumutare -->
+<form th:action="@{/admin/assign-loan}" method="post" style="text-align:center; margin-top: 20px;">
+    <label for="userId">Selectează Utilizator:</label>
+    <select name="userId" id="userId" required>
+        <option value="">-- Alege utilizatorul --</option>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
+    </select>
+    <br><br>
+
+    <label for="bookId">Selectează Carte:</label>
+    <select name="bookId" id="bookId" required>
+        <option value="">-- Alege cartea --</option>
+        <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+    </select>
+    <br><br>
+
+    <label for="loanDate">Data Împrumutului:</label>
+    <input type="date" id="loanDate" name="loanDate" required>
+    <br><br>
+
+    <label for="dueDate">Data Scadenței:</label>
+    <input type="date" id="dueDate" name="dueDate" required>
+    <br><br>
+
+    <button type="submit">Împrumută Carte</button>
+</form>
+
+</body>
+</html>

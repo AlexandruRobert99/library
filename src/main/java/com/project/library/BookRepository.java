@@ -9,10 +9,10 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    // Căutare după titlu
+    // ✅ Căutare după titlu
     List<Book> findByTitleContainingIgnoreCase(String title);
 
-    // Căutare după autor
+    // ✅ Căutare după autor
     List<Book> findByAuthorContainingIgnoreCase(String author);
 
     // Căutare după categorie
@@ -30,4 +30,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // Căutare după ISBN
     Book findByIsbn(String isbn);
 
+    // 🔍 Căutare generală după mai multe câmpuri (titlu, autor, categorie, editură, colecție)
+    List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrCategoryContainingIgnoreCaseOrPublisherContainingIgnoreCaseOrCollectionContainingIgnoreCase(
+            String title, String author, String category, String publisher, String collection
+    );
 }

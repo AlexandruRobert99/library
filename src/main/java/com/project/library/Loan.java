@@ -22,7 +22,7 @@ public class Loan {
     private LocalDate loanDate;         // Data împrumutului
     private LocalDate dueDate;          // Data scadenței
     private LocalDate returnDate;       // Data returnării
-    private Integer penalty;            // Penalizare (50 lei/zi întârziere)
+    private Integer penalty = 0;
 
     public Loan() {}
 

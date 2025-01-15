@@ -36,4 +36,5 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     // Împrumuturi returnate
     List<Loan> findByReturnDateIsNotNull();
 
+
 }

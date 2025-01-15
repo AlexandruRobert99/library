@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -22,10 +23,16 @@ public class AdminController {
 
     private final AdminService adminService;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+    private final LoanService loanService;
 
-    public AdminController(AdminService adminService, UserService userService) {
+    public AdminController(AdminService adminService, UserService userService, UserRepository userRepository, BookRepository bookRepository, LoanService loanService) {
         this.adminService = adminService;
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.bookRepository = bookRepository;
+        this.loanService = loanService;
     }
 
     // Form de înregistrare admin
@@ -225,4 +232,38 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("message", response);
         return "redirect:/admin/manage-books";
     }
+
+    @PostMapping("/admin/assign-loan")
+    public String assignLoan(@RequestParam Long userId,
+                             @RequestParam Long bookId,
+                             @RequestParam String loanDate,
+                             @RequestParam String dueDate,
+                             Model model) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilizatorul nu a fost găsit."));
+        LocalDate loanDateParsed = LocalDate.parse(loanDate);
+        LocalDate dueDateParsed = LocalDate.parse(dueDate);
+
+        String result = loanService.borrowBook(bookId, user, loanDateParsed, dueDateParsed);
+
+        if (result.equals("Împrumutul a fost realizat cu succes!")) {
+            model.addAttribute("successMessage", result);
+        } else {
+            model.addAttribute("errorMessage", result);
+        }
+
+        // Reîncarcă lista de utilizatori și cărți
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("books", bookRepository.findAll());
+
+        return "assign_loan";
+    }
+
+    @GetMapping("/admin/assign-loan")
+    public String showAssignLoanForm(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("books", bookRepository.findAll());
+        return "assign_loan";
+    }
+
 }
