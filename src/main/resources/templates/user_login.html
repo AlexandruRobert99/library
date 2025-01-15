@@ -73,17 +73,17 @@
 
 <h2>Autentificare Utilizator</h2>
 
-<!-- 🔥 Mesaj de eroare dacă autentificarea a eșuat -->
+<!-- Mesaj de eroare dacă autentificarea a eșuat -->
 <div th:if="${param.error}">
     <p class="error">Username sau parolă incorecte sau contul nu este activ!</p>
 </div>
 
-<!-- ✅ Mesaj de succes după delogare -->
+<!-- Mesaj de succes după delogare -->
 <div th:if="${param.logout}">
     <p class="success">V-ați delogat cu succes.</p>
 </div>
 
-<!-- 📋 Formular de login -->
+<!-- Formular de login -->
 <form th:action="@{/user/login}" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" placeholder="Introduceți username-ul" required>
@@ -94,7 +94,7 @@
     <button type="submit">Autentificare</button>
 </form>
 
-<!-- 🌟 Link către pagina de înregistrare -->
+<!-- Link către pagina de înregistrare -->
 <p>Nu ai cont? <a th:href="@{/user/register}">Înregistrează-te aici</a></p>
 
 </body>
