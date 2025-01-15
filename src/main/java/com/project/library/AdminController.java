@@ -1,5 +1,9 @@
 package com.project.library;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -9,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -108,5 +114,23 @@ public class AdminController {
     }
 
 
+    @GetMapping("/id-card/{userId}")
+    public ResponseEntity<Resource> downloadIdCard(@PathVariable Long userId) {
+        User user = adminService.findUserById(userId);
+        if (user.getIdCardUrl() == null) {
+            throw new RuntimeException("Cartea de identitate nu a fost încărcată.");
+        }
+
+        try {
+            Path filePath = Paths.get(user.getIdCardUrl());
+            Resource resource = new UrlResource(filePath.toUri());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            throw new RuntimeException("Fișierul nu a putut fi descărcat.");
+        }
+    }
 
 }

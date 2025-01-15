@@ -49,6 +49,12 @@ public class AdminService {
     }
 
     @Transactional
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilizatorul nu a fost găsit."));
+    }
+
+    @Transactional
     public List<User> getInactiveUsers() {
         return userRepository.findByActiveFalse();
     }

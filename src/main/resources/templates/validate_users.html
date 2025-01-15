@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Validare Utilizatori</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            margin: 30px auto;
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-activate {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-activate:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/add-book">Adaugă Carte</a>
+    <a href="/admin/validate-users">Validare Utilizatori</a>
+    <a href="/admin/view-loans">Împrumuturi</a>
+    <a href="/admin/logout">Delogare</a>
+</div>
+
+<div class="container">
+    <h2>Utilizatori Inactivi</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nume Utilizator</th>
+            <th>Email</th>
+            <th>Carte de Identitate</th>
+            <th>Acțiune</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterăm utilizatorii inactivi -->
+        <tr th:each="user : ${inactiveUsers}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.username}">Nume Utilizator</td>
+            <td th:text="${user.email}">email@example.com</td>
+            <td>
+                <!-- Link pentru descărcarea sau vizualizarea cărții de identitate -->
+                <a th:href="@{'/id-card/' + ${user.id}}" target="_blank">Vezi ID</a>
+            </td>
+            <td>
+                <form th:action="@{/admin/activate-user/{id}(id=${user.id})}" method="post">
+                    <button type="submit" class="btn-activate">Activează</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Mesaj de succes -->
+    <div th:if="${param.success}">
+        <p style="color: green;">Utilizatorul a fost activat cu succes!</p>
+    </div>
+</div>
+
+</body>
+</html>
