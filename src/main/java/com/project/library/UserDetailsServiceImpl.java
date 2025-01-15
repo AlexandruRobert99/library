@@ -22,6 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Utilizatorul nu a fost găsit: " + username);
         }
 
+        if (!user.isActive()) {
+            throw new UsernameNotFoundException("Contul nu este activ. Așteptați validarea administratorului.");
+        }
+
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

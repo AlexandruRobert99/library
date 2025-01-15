@@ -2,32 +2,100 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Autentificare Utilizator</title>
+    <title>Login Utilizator</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            color: green;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
 <h2>Autentificare Utilizator</h2>
 
+<!-- 🔥 Mesaj de eroare dacă autentificarea a eșuat -->
 <div th:if="${param.error}">
-    <p style="color: red;">Username sau parolă incorecte!</p>
+    <p class="error">Username sau parolă incorecte sau contul nu este activ!</p>
 </div>
 
+<!-- ✅ Mesaj de succes după delogare -->
 <div th:if="${param.logout}">
-    <p style="color: green;">Te-ai delogat cu succes!</p>
+    <p class="success">V-ați delogat cu succes.</p>
 </div>
 
+<!-- 📋 Formular de login -->
 <form th:action="@{/user/login}" method="post">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required/><br/>
+    <input type="text" id="username" name="username" placeholder="Introduceți username-ul" required>
 
     <label for="password">Parolă:</label>
-    <input type="password" id="password" name="password" required/><br/>
+    <input type="password" id="password" name="password" placeholder="Introduceți parola" required>
 
     <button type="submit">Autentificare</button>
 </form>
 
-<p>Nu ai cont? <a href="/user/register">Înregistrează-te aici</a></p>
+<!-- 🌟 Link către pagina de înregistrare -->
+<p>Nu ai cont? <a th:href="@{/user/register}">Înregistrează-te aici</a></p>
 
 </body>
 </html>

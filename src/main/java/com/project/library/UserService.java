@@ -26,6 +26,12 @@ public class UserService {
         this.loanRepository = loanRepository;
     }
 
+
+    // 🔍 Metodă pentru a găsi utilizatorul după username
+    public User findByUsername(String username) {
+        return userRepository.findByUsernameIgnoreCase(username);
+    }
+
     @Transactional
     public String registerUser(User user, MultipartFile idCardFile) throws IOException {
         if (userRepository.findByUsernameIgnoreCase(user.getUsername()) != null) {
@@ -51,6 +57,7 @@ public class UserService {
     @Transactional
     public String authenticateUser(String username, String password) {
         User user = userRepository.findByUsernameIgnoreCaseAndPassword(username, password);
+
         if (user == null) {
             return "Username sau parolă incorecte!";
         }
@@ -59,6 +66,7 @@ public class UserService {
         }
         return "Autentificare reușită!";
     }
+
 
     @Transactional
     public List<Book> searchBooksByTitle(String title) {
