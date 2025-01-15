@@ -19,13 +19,13 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
-    // 🏠 Afișează pagina de căutare
+    // Afișează pagina de căutare
     @GetMapping("/books/search")
     public String showSearchPage() {
         return "search_books";
     }
 
-    // 🔎 Căutare după titlu
+    // Căutare după titlu
     @GetMapping("/books/search/title")
     public String searchByTitle(@RequestParam("keyword") String title, Model model) {
         List<Book> books = bookRepository.findByTitleContainingIgnoreCase(title);
@@ -33,7 +33,7 @@ public class BookController {
         return "search_results";
     }
 
-    // 🔎 Căutare după autor
+    // Căutare după autor
     @GetMapping("/books/search/author")
     public String searchByAuthor(@RequestParam("keyword") String author, Model model) {
         List<Book> books = bookRepository.findByAuthorContainingIgnoreCase(author);
@@ -41,7 +41,7 @@ public class BookController {
         return "search_results";
     }
 
-    // 🔎 Căutare după categorie
+    // Căutare după categorie
     @GetMapping("/books/search/category")
     public String searchByCategory(@RequestParam("keyword") String category, Model model) {
         List<Book> books = bookRepository.findByCategoryContainingIgnoreCase(category);
@@ -49,7 +49,7 @@ public class BookController {
         return "search_results";
     }
 
-    // 🔎 Căutare după editură
+    // Căutare după editură
     @GetMapping("/books/search/publisher")
     public String searchByPublisher(@RequestParam("keyword") String publisher, Model model) {
         List<Book> books = bookRepository.findByPublisherContainingIgnoreCase(publisher);
@@ -57,7 +57,7 @@ public class BookController {
         return "search_results";
     }
 
-    // 🔎 Căutare după colecție
+    // Căutare după colecție
     @GetMapping("/books/search/collection")
     public String searchByCollection(@RequestParam("keyword") String collection, Model model) {
         List<Book> books = bookRepository.findByCollectionContainingIgnoreCase(collection);
@@ -65,7 +65,7 @@ public class BookController {
         return "search_results";
     }
 
-    // 🔎 Căutare după an de apariție
+    // Căutare după an de apariție
     @GetMapping("/books/search/year")
     public String searchByYear(@RequestParam("year") int year, Model model) {
         LocalDate startDate = LocalDate.of(year, 1, 1);

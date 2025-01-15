@@ -21,14 +21,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    // ✅ Formular înregistrare
+    // Formular înregistrare
     @GetMapping("/user/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "user_register";
     }
 
-    // ✅ Procesare înregistrare
+    // Procesare înregistrare
     @PostMapping("/user/register")
     public String registerUser(@ModelAttribute("user") User user,
                                @RequestParam("idCardFile") MultipartFile idCardFile,
@@ -49,7 +49,7 @@ public class UserController {
         }
     }
 
-    // ✅ Formular login
+    // Formular login
     @GetMapping("/user/login")
     public String showLoginForm() {
         return "user_login";
